@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="gitignore.txt" />
+    <File Path="Readme.md" />
+    <File Path="Variables.cs" />
+  </Folder>
+  <Project Path="Hello World!/Hello World!.csproj" />
+</Solution>
