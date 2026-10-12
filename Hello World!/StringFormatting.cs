@@ -5,7 +5,7 @@ namespace Hello_World_
 {
     internal class StringFormatting
     {
-        public static void run()
+        public static void Run()
         {
             string name = "Ritu";
             int age = 21;

@@ -6,7 +6,7 @@ namespace Hello_World_
 {
     public class Calculator
     {
-        public static void run()
+        public static void Run()
         {
             Console.WriteLine("---Simple Calculator---");
             Console.WriteLine("Enter first number:");

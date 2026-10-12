@@ -6,7 +6,7 @@ namespace Hello_World_
 {
     internal class Operators
     {
-        public static void run()
+        public static void Run()
         {
             int a = 9;
             int b = 8;
