@@ -3,5 +3,6 @@
     <File Path="gitignore.txt" />
     <File Path="Readme.md" />
   </Folder>
+  <Project Path="Day5LibraryManagement/Day5LibraryManagement.csproj" Id="cd1fe7a3-50ab-4ed5-9460-514874298177" />
   <Project Path="Hello World!/Hello World!.csproj" />
 </Solution>

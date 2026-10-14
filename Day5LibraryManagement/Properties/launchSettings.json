@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Day5LibraryManagement": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
