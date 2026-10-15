@@ -1,9 +1,7 @@
-﻿using Hello_World_;
-using System;
+﻿
+using Hello_World_;
 using System;
 using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CSharpPractice;
 
@@ -47,6 +45,7 @@ public class StudentMarksManager
 
                 case "5":
                     running = false;
+                    Console.WriteLine("Goodbye!");
                     break;
 
                 default:
@@ -158,4 +157,5 @@ public class StudentMarksManager
         Console.WriteLine($"Class average: {average:F2}");
     }
 }
+
 
