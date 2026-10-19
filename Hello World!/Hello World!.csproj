@@ -8,4 +8,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Day5LibraryManagement\Day5LibraryManagement.csproj" />
+  </ItemGroup>
+
 </Project>

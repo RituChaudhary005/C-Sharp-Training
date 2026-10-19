@@ -1,4 +1,6 @@
-﻿using Day5LibraryManagement.Models;
+﻿using System;
+using System.Collections.Generic;
+using Day5LibraryManagement.Models;
 using Day5LibraryManagement.Services;
 
 namespace Day5LibraryManagement
@@ -7,9 +9,8 @@ namespace Day5LibraryManagement
     {
         static void Main(string[] args)
         {
-           
-
-            LibraryService library = new LibraryService();
+            IBookRepository repository = new InMemoryBookRepository();
+            LibraryService library = new LibraryService(repository);
 
             bool running = true;
 
@@ -37,23 +38,23 @@ namespace Day5LibraryManagement
                 switch (choice)
                 {
                     case 1:
-                        AddBook();
+                        AddBook(library);
                         break;
 
                     case 2:
-                        ViewBooks();
+                        ViewBooks(library);
                         break;
 
                     case 3:
-                        SearchBooks();
+                        SearchBooks(library);
                         break;
 
                     case 4:
-                        IssueBook();
+                        IssueBook(library);
                         break;
 
                     case 5:
-                        ReturnBook();
+                        ReturnBook(library);
                         break;
 
                     case 6:
@@ -66,124 +67,117 @@ namespace Day5LibraryManagement
                         break;
                 }
             }
+        }
 
-            void AddBook()
+        static void AddBook(LibraryService library)
+        {
+            Console.Write("Enter book ID: ");
+
+            if (!int.TryParse(Console.ReadLine(), out int id) || id <= 0)
             {
-                Console.Write("Enter book ID: ");
-
-                if (!int.TryParse(Console.ReadLine(), out int id) || id <= 0)
-                {
-                    Console.WriteLine("Book ID must be a positive number.");
-                    return;
-                }
-
-                Console.Write("Enter book title: ");
-                string? title = Console.ReadLine();
-
-                Console.Write("Enter author name: ");
-                string? author = Console.ReadLine();
-
-                if (string.IsNullOrWhiteSpace(title)
-                    || string.IsNullOrWhiteSpace(author))
-                {
-                    Console.WriteLine("Title and author cannot be empty.");
-                    return;
-                }
-
-                bool added = library.AddBook(id, title, author);
-
-                if (added)
-                {
-                    Console.WriteLine("Book added successfully!");
-                }
-                else
-                {
-                    Console.WriteLine(
-                        "Could not add book. The ID may already exist.");
-                }
+                Console.WriteLine("Book ID must be a positive number.");
+                return;
             }
 
-            void ViewBooks()
+            Console.Write("Enter book title: ");
+            string? title = Console.ReadLine();
+
+            Console.Write("Enter author name: ");
+            string? author = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(title) ||
+                string.IsNullOrWhiteSpace(author))
             {
-                List<Book> books = library.GetAllBooks();
-
-                if (books.Count == 0)
-                {
-                    Console.WriteLine("No books found in the library.");
-                    return;
-                }
-
-                Console.WriteLine("\n--- All Books ---");
-
-                foreach (Book book in books)
-                {
-                    Console.WriteLine(book);
-                }
-
-                Console.WriteLine($"Total books: {books.Count}");
+                Console.WriteLine("Title and author cannot be empty.");
+                return;
             }
 
-            void SearchBooks()
+            bool added = library.AddBook(id, title, author);
+
+            Console.WriteLine(added
+                ? "Book added successfully!"
+                : "Could not add book. The ID may already exist.");
+        }
+
+        static void ViewBooks(LibraryService library)
+        {
+            List<Book> books = library.GetAllBooks();
+
+            if (books.Count == 0)
             {
-                Console.Write("Enter a title or author to search: ");
-                string? keyword = Console.ReadLine();
-
-                if (string.IsNullOrWhiteSpace(keyword))
-                {
-                    Console.WriteLine("Search keyword cannot be empty.");
-                    return;
-                }
-
-                List<Book> results = library.SearchBooks(keyword);
-
-                if (results.Count == 0)
-                {
-                    Console.WriteLine("No matching books found.");
-                    return;
-                }
-
-                Console.WriteLine("\n--- Search Results ---");
-
-                foreach (Book book in results)
-                {
-                    Console.WriteLine(book);
-                }
+                Console.WriteLine("No books found in the library.");
+                return;
             }
 
-            void IssueBook()
+            Console.WriteLine("\n--- All Books ---");
+
+            foreach (Book book in books)
             {
-                Console.Write("Enter the ID of the book to issue: ");
-
-                if (!int.TryParse(Console.ReadLine(), out int id))
-                {
-                    Console.WriteLine("Please enter a valid book ID.");
-                    return;
-                }
-
-                bool issued = library.IssueBook(id);
-
-                Console.WriteLine(issued
-                    ? "Book issued successfully!"
-                    : "Book not found or already issued.");
+                Console.WriteLine(book);
             }
 
-            void ReturnBook()
+            Console.WriteLine($"Total books: {books.Count}");
+        }
+
+        static void SearchBooks(LibraryService library)
+        {
+            Console.Write("Enter a title or author to search: ");
+            string? keyword = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(keyword))
             {
-                Console.Write("Enter the ID of the book to return: ");
-
-                if (!int.TryParse(Console.ReadLine(), out int id))
-                {
-                    Console.WriteLine("Please enter a valid book ID.");
-                    return;
-                }
-
-                bool returned = library.ReturnBook(id);
-
-                Console.WriteLine(returned
-                    ? "Book returned successfully!"
-                    : "Book not found or it is already available.");
+                Console.WriteLine("Search keyword cannot be empty.");
+                return;
             }
 
+            List<Book> results = library.SearchBooks(keyword);
+
+            if (results.Count == 0)
+            {
+                Console.WriteLine("No matching books found.");
+                return;
+            }
+
+            Console.WriteLine("\n--- Search Results ---");
+
+            foreach (Book book in results)
+            {
+                Console.WriteLine(book);
+            }
+        }
+
+        static void IssueBook(LibraryService library)
+        {
+            Console.Write("Enter the ID of the book to issue: ");
+
+            if (!int.TryParse(Console.ReadLine(), out int id) || id <= 0)
+            {
+                Console.WriteLine("Please enter a valid positive book ID.");
+                return;
+            }
+
+            bool issued = library.IssueBook(id);
+
+            Console.WriteLine(issued
+                ? "Book issued successfully!"
+                : "Book not found or already issued.");
+        }
+
+        static void ReturnBook(LibraryService library)
+        {
+            Console.Write("Enter the ID of the book to return: ");
+
+            if (!int.TryParse(Console.ReadLine(), out int id) || id <= 0)
+            {
+                Console.WriteLine("Please enter a valid positive book ID.");
+                return;
+            }
+
+            bool returned = library.ReturnBook(id);
+
+            Console.WriteLine(returned
+                ? "Book returned successfully!"
+                : "Book not found or it is already available.");
         }
     }
 }

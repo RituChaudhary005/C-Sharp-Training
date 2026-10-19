@@ -1,84 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using Day5LibraryManagement.Models;
 
 namespace Day5LibraryManagement.Services
 {
-
-    using Day5LibraryManagement.Models;
-    using global::Day5LibraryManagement.Models;
-
     public class LibraryService
     {
-        private readonly List<Book> books = new();
+        private readonly IBookRepository _repository;
+
+        public LibraryService(IBookRepository repository)
+        {
+            _repository = repository;
+        }
 
         public bool AddBook(int id, string title, string author)
         {
-            if (id <= 0 || string.IsNullOrWhiteSpace(title)
-                || string.IsNullOrWhiteSpace(author))
-            {
-                return false;
-            }
-
-            bool duplicateId = books.Any(book => book.Id == id);
-
-            if (duplicateId)
-            {
-                return false;
-            }
-
-            Book book = new Book(id, title.Trim(), author.Trim());
-
-            books.Add(book);
-
-            return true;
+            var book = new Book(id, title, author);
+            return _repository.Add(book);
         }
 
-        public List<Book> GetAllBooks()
-        {
-            return books;
-        }
+        public List<Book> GetAllBooks() => _repository.GetAll();
 
-        public List<Book> SearchBooks(string keyword)
-        {
-            if (string.IsNullOrWhiteSpace(keyword))
-            {
-                return new List<Book>();
-            }
+        public List<Book> SearchBooks(string keyword) => _repository.Search(keyword);
 
-            return books
-                .Where(book =>
-                    book.Title.Contains(
-                        keyword, StringComparison.OrdinalIgnoreCase)
-                    ||
-                    book.Author.Contains(
-                        keyword, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-        }
+        public bool IssueBook(int id) => _repository.Issue(id);
 
-        public bool IssueBook(int id)
-        {
-            Book? book = books.FirstOrDefault(book => book.Id == id);
-
-            if (book is null)
-            {
-                return false;
-            }
-
-            return book.Issue();
-        }
-
-        public bool ReturnBook(int id)
-        {
-            Book? book = books.FirstOrDefault(book => book.Id == id);
-
-            if (book is null)
-            {
-                return false;
-            }
-
-            return book.ReturnBook();
-        }
+        public bool ReturnBook(int id) => _repository.Return(id);
     }
-
 }
